@@ -50,12 +50,16 @@ export const Login = () => {
         const { data } = res;
         navigate("/profile");
         toast.success(res?.message);
-        
-        // check the status of logged in 
+
+        // check the status of logged in
         getLoggedIn();
       },
       (err) => {
-        toast.error(err?.response?.data?.message);
+        if (!err) {
+          toast.error("Network error");
+        } else {
+          toast.error(err?.response?.data?.message);
+        }
       }
     );
   };
@@ -73,6 +77,8 @@ export const Login = () => {
                 type="email"
                 placeholder="Email"
                 autoComplete="off"
+                autoFocus="off"
+                autoSave="off"
                 onChange={(e) => setData({ ...data, email: e.target.value })}
               />
             </div>
@@ -83,6 +89,8 @@ export const Login = () => {
                 type="password"
                 placeholder="Password"
                 autoComplete="off"
+                autoFocus="off"
+                autoSave="off"
                 onChange={(e) => setData({ ...data, password: e.target.value })}
               />
             </div>

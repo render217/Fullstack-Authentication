@@ -95,7 +95,7 @@ export const EditProfile = () => {
                 <div className="h-16 w-16 rounded-md overflow-hidden relative">
                   <img
                     className=" cursor-pointer h-full w-full object-cover"
-                    src={user.profileImage}
+                    src={user?.profileImage}
                     alt=""
                   />
                   <i className="absolute top-6 left-6 text-white fa-solid fa-camera"></i>

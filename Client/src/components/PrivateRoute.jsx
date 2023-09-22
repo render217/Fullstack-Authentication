@@ -5,7 +5,7 @@ import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 export const PrivateRoute = ({ children }) => {
   const { isAuth } = useAuth();
 
-  if (!isAuth) return <Navigate to="/login" replace />;
+  if (!isAuth) return <Navigate to="/" replace />;
 
   return children;
 };

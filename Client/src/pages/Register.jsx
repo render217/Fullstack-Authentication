@@ -32,7 +32,11 @@ export const Register = () => {
         navigate("/login");
       },
       (err) => {
-        toast.error(err?.response?.data?.message);
+        if (!err) {
+          toast.error("Network error");
+        } else {
+          toast.error(err?.response?.data?.message);
+        }
       }
     );
 
@@ -66,6 +70,8 @@ export const Register = () => {
                 placeholder="Email"
                 value={data.email}
                 autoComplete="off"
+                autoFocus="off"
+                autoSave="off"
                 onChange={(e) => setData({ ...data, email: e.target.value })}
               />
             </div>
@@ -77,6 +83,8 @@ export const Register = () => {
                 placeholder="Password"
                 value={data.password}
                 autoComplete="off"
+                autoFocus="off"
+                autoSave="off"
                 onChange={(e) => setData({ ...data, password: e.target.value })}
               />
             </div>

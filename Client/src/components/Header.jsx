@@ -59,7 +59,7 @@ export const Header = ({ user, showDropDown, setShowDropDown }) => {
               <img
                 className="w-full h-full object-cover"
                 src={user?.profileImage}
-                alt=""
+                alt="profileImage"
               />
             </div>
             <p className="cursor-pointer">{user?.username}</p>

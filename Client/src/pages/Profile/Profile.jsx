@@ -51,7 +51,7 @@ export const Profile = () => {
                 ) : (
                   <img
                     className="w-14 block max-[550px]:text-right"
-                    src={user.profileImage}
+                    src={user?.profileImage}
                     alt=""
                   />
                 )}
