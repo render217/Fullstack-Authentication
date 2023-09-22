@@ -2,6 +2,7 @@ require("dotenv").config({ path: "./src/config/.env" });
 require("express-async-errors");
 require("./src/config/passport");
 const express = require("express");
+const morgan = require('morgan')
 const connectDB = require("./src/config/db");
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -13,6 +14,7 @@ const passport = require("passport");
 const { ensureAuth } = require("./src/middleware/auth");
 const errorHandler = require("./src/middleware/errorHandler");
 
+app.use(morgan('dev'))
 app.use(
   cookieSession({
     secret: [process.env.COOKIE_SESSION_SECRET],
