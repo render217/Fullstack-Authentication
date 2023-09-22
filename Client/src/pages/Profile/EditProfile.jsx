@@ -1,26 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Link,
   useLocation,
   useNavigate,
-  useOutlet,
   useOutletContext,
 } from "react-router-dom";
-import { useAuth } from "../../context/AuthProvider";
+
 import { requestHandler } from "../../util";
 import { getUserProfile, updateUserProfile } from "../../api";
 import { toast } from "react-toastify";
-
 import Skeleton from "react-loading-skeleton";
-import useProfile from "../../hooks/useProfile";
 
 export const EditProfile = () => {
   const { setShowDropDown, user, reloadProfile, loading } = useOutletContext();
   const navigate = useNavigate();
 
-  // const { user, loading, setUser, reloadProfile } = useProfile();
-
+  // for fast reload
   const stateUser = useLocation().state;
+
   const [updatingProfile, setUpdatingProfile] = useState(false);
 
   const fileRef = useRef();
@@ -34,6 +31,7 @@ export const EditProfile = () => {
   });
 
   const [imageFile, setImageFile] = useState();
+  const [imagePreview, setImagePreview] = useState();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -62,12 +60,13 @@ export const EditProfile = () => {
       (res) => {
         const { data } = res;
         toast.success(res?.message);
-        // setUser(data.user);
         reloadProfile();
         navigate("/profile");
       },
       (err) => {
         toast.error(err?.response?.data?.message);
+        setImagePreview(null);
+        setImageFile(null);
       }
     );
   };
@@ -93,22 +92,36 @@ export const EditProfile = () => {
             <form onSubmit={handleFormSubmit}>
               <div className="my-5 flex items-center gap-5">
                 <div className="h-16 w-16 rounded-md overflow-hidden relative">
-                  <img
-                    className=" cursor-pointer h-full w-full object-cover"
-                    src={user?.profileImage}
-                    alt=""
-                  />
+                  {imagePreview ? (
+                    <img
+                      className=" cursor-pointer h-full w-full object-cover"
+                      src={imagePreview}
+                      alt="asdf"
+                    />
+                  ) : (
+                    <img
+                      className=" cursor-pointer h-full w-full object-cover"
+                      src={user?.profileImage}
+                      alt=""
+                    />
+                  )}
                   <i className="absolute top-6 left-6 text-white fa-solid fa-camera"></i>
                 </div>
+
                 {updatingProfile ? (
-                  <p>uploading...</p>
+                  <p>saving...</p>
                 ) : (
                   <label className="flex items-center space-x-2">
                     <span className="hidden">
                       <input
                         type="file"
                         ref={fileRef}
-                        onChange={(e) => setImageFile(e.target.files[0])}
+                        onChange={(e) => {
+                          setImageFile(e.target.files[0]);
+                          setImagePreview(
+                            URL.createObjectURL(e.target.files[0])
+                          );
+                        }}
                       />
                     </span>
                     <button

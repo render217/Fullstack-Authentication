@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Link,
-  redirect,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SocialLogin } from "../components";
 import { toast } from "react-toastify";
 import { requestHandler } from "../util";
@@ -15,22 +9,27 @@ import { useAuth } from "../context/AuthProvider";
 export const Login = () => {
   const { getLoggedIn } = useAuth();
 
+  const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
 
+  // used to set error message when login failed from socialRedirectPage
+  const searchParams = new URLSearchParams(location.search);
   useEffect(() => {
     let message = searchParams.get("message");
     if (message) {
       toast.error(message);
-      message = null;
-      setSearchParams({});
+      searchParams.delete("message");
     }
   }, []);
+
+  // state to disable the button while submitting the formdata
   const [disable, setDisable] = useState(false);
+
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -63,6 +62,8 @@ export const Login = () => {
       }
     );
   };
+
+  
   return (
     <div className="w-100 h-[100vh] grid place-items-center px-5 font-NotoSans">
       <div className="max-w-lg border border-clrPaleSlate rounded-3xl px-10 py-10">

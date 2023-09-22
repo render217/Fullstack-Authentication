@@ -10,11 +10,11 @@ import { requestHandler } from "../util";
 import { logoutUser } from "../api";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthProvider";
-// import useProfile from "../hooks/useProfile";
+
 
 export const Header = ({ user, showDropDown, setShowDropDown }) => {
   const { isAuth, getLoggedIn, setIsAuth } = useAuth();
-  // const { user } = useProfile();
+  
 
   const navigate = useNavigate();
 
