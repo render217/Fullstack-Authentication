@@ -64,7 +64,7 @@ exports.updateUser = async (req, res) => {
       folder: "fullstack_authentication",
       transformation: [
         { width: 800, height: 600, crop: "limit" },
-        { quality: "auto", fetch_format: "auto" },
+        { quality: "35" },
         
       ],
     });
