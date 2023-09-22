@@ -56,7 +56,7 @@ app.use(cookieParser());
 passport.initialize();
 passport.session();
 
-app.use("/", (req, res) => res.send("server is ok"));
+
 app.use("/auth", authRoute);
 app.use("/user", ensureAuth, userRoute);
 
