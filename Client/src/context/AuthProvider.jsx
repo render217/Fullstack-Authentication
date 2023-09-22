@@ -1,18 +1,30 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import useProfile from "../hooks/useProfile";
+import { checkLogInStatus } from "../api";
+import { Loader } from "../components";
 
 const AuthContext = createContext({
-  user: {},
-  token: "",
-  setToken: () => {},
-  setUser: () => {},
+  isAuth: {},
+  setIsAuth: () => {},
+  getLoggedIn: () => {},
 });
 const AuthProvider = ({ children }) => {
-  const { currentUser } = useProfile();
-  const [user, setUser] = useState(currentUser);
+  const [isAuth, setIsAuth] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+  const getLoggedIn = async () => {
+    setIsLoading(true);
+    const status = await checkLogInStatus();
+    setIsAuth(status.data);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    getLoggedIn();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      {children}
+    <AuthContext.Provider value={{ isAuth, getLoggedIn, setIsAuth }}>
+      {isLoading ? <Loader /> : children}
     </AuthContext.Provider>
   );
 };

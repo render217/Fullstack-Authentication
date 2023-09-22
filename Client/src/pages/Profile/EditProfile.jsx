@@ -1,29 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { Link, useOutlet, useOutletContext } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useOutlet,
+  useOutletContext,
+} from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import { requestHandler } from "../../util";
 import { getUserProfile, updateUserProfile } from "../../api";
 import { toast } from "react-toastify";
-import useProfile from "../../hooks/useProfile";
+
 import Skeleton from "react-loading-skeleton";
+import useProfile from "../../hooks/useProfile";
 
 export const EditProfile = () => {
-  const outletCtx = useOutletContext();
-  const { loading, currentUser, reloadProfile } = useProfile();
-  const [data, setData] = useState();
-  const [disable, setDisable] = useState(false);
-  useEffect(() => {
-    if (currentUser?.username) {
-      const { bio, email, phone, password, username } = currentUser;
-      setData({
-        bio,
-        email,
-        phone,
-        password,
-        username,
-      });
-    }
-  }, [currentUser]);
+  const { setShowDropDown, user, reloadProfile, loading } = useOutletContext();
+  const navigate = useNavigate();
+
+  // const { user, loading, setUser, reloadProfile } = useProfile();
+
+  const stateUser = useLocation().state;
+  const [updatingProfile, setUpdatingProfile] = useState(false);
+
+  const fileRef = useRef();
+
+  const [data, setData] = useState({
+    email: stateUser?.email || user?.email || "",
+    bio: stateUser?.bio || user?.bio || "",
+    phone: stateUser?.phone || user?.phone || "",
+    password: stateUser?.password || user?.password || "",
+    username: stateUser?.username || user?.username || "",
+  });
+
+  const [imageFile, setImageFile] = useState();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,17 +47,24 @@ export const EditProfile = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+
+    formData.append("email", data.email);
+    formData.append("bio", data.bio);
+    formData.append("phone", data.phone);
+    formData.append("password", data.password);
+    formData.append("username", data.username);
+    formData.append("profileImage", imageFile);
+
     await requestHandler(
-      async () => updateUserProfile(data),
-      setDisable,
+      async () => await updateUserProfile(formData),
+      setUpdatingProfile,
       (res) => {
-        const {
-          data: { user },
-        } = res;
-        console.log("updated user");
+        const { data } = res;
         toast.success(res?.message);
-        console.log(user);
+        // setUser(data.user);
         reloadProfile();
+        navigate("/profile");
       },
       (err) => {
         toast.error(err?.response?.data?.message);
@@ -57,10 +74,7 @@ export const EditProfile = () => {
 
   return (
     <>
-      <div
-        className="pb-10 px-4"
-        onClick={() => outletCtx.setShowDropDown(false)}
-      >
+      <div className="pb-10 px-4" onClick={() => setShowDropDown(false)}>
         <Link
           to="/profile"
           className="block text-clrCelestialBlue space-x-2 max-w-5xl  mx-auto "
@@ -76,20 +90,38 @@ export const EditProfile = () => {
             Changes will be reflected to every services
           </p>
           <div>
-            <div className="my-5 flex items-center gap-5">
-              <div className="h-16 w-16 rounded-md overflow-hidden relative">
-                <img
-                  className=" cursor-pointer h-full w-full object-cover"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe6l-J8PqR-hPEsyazSdxuDLgUGy2mPzELNT9dfBUeZvtlrGzSY0iNFsrOntDObPg99K4&usqp=CAU"
-                  alt=""
-                />
-                <i className="absolute top-6 left-6 text-white fa-solid fa-camera"></i>
-              </div>
-              <p className=" cursor-pointer text-xs uppercase text-clrMediumGrey">
-                Change photo
-              </p>
-            </div>
             <form onSubmit={handleFormSubmit}>
+              <div className="my-5 flex items-center gap-5">
+                <div className="h-16 w-16 rounded-md overflow-hidden relative">
+                  <img
+                    className=" cursor-pointer h-full w-full object-cover"
+                    src={user.profileImage}
+                    alt=""
+                  />
+                  <i className="absolute top-6 left-6 text-white fa-solid fa-camera"></i>
+                </div>
+                {updatingProfile ? (
+                  <p>uploading...</p>
+                ) : (
+                  <label className="flex items-center space-x-2">
+                    <span className="hidden">
+                      <input
+                        type="file"
+                        ref={fileRef}
+                        onChange={(e) => setImageFile(e.target.files[0])}
+                      />
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => fileRef.current.click()}
+                      className="cursor-pointer text-xs uppercase text-clrMediumGrey"
+                    >
+                      Change photo
+                    </button>
+                  </label>
+                )}
+              </div>
+
               <div className="mb-5 max-w-sm">
                 <p className="text-xs mb-1 text-clrVampireGrey">Name</p>
                 {loading ? (
@@ -118,7 +150,7 @@ export const EditProfile = () => {
                     placeholder="Enter you bio..."
                     type="text"
                     name="bio"
-                    value={data?.bio  || ""}
+                    value={data?.bio || ""}
                     onChange={(e) => handleInputChange(e)}
                   />
                 )}
@@ -150,9 +182,7 @@ export const EditProfile = () => {
                     value={data?.email || ""}
                     onChange={(e) => handleInputChange(e)}
                     disabled={
-                      currentUser?.providerType === "email_password"
-                        ? false
-                        : true
+                      user?.providerType === "email_password" ? false : true
                     }
                     // disabled={false}
                   />
@@ -178,15 +208,15 @@ export const EditProfile = () => {
                     placeholder="Enter you new password..."
                     type="text"
                     name="password"
-                    value={data?.password  || ""}
+                    value={data?.password || ""}
                     onChange={(e) => handleInputChange(e)}
                   />
                 )}
               </div>
               <button
-                type={disable ? "button" : "submit"}
+                type={updatingProfile ? "button" : "submit"}
                 className={
-                  disable
+                  updatingProfile
                     ? "text-white bg-clrClearBlue/60 cursor-not-allowed px-4 py-1 rounded-md hover:opacity-95"
                     : "text-white bg-clrClearBlue cursor-pointer px-4 py-1 rounded-md hover:opacity-95"
                 }

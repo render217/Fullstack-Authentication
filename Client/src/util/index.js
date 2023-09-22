@@ -3,10 +3,12 @@ export const requestHandler = async (api, setLoading, onSucess, onError) => {
     setLoading && setLoading(true);
     // await sleep(5000);
     const { data } = await api();
+    
     if (data?.success) {
       onSucess(data);
     }
   } catch (error) {
+    
     if ([401, 403].includes(error?.response?.data?.statusCode)) {
       if (isBrowser) {
         // window.location.href = "/login";

@@ -1,20 +1,32 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { EditProfile, Login, Profile, Register } from "./pages";
+import { EditProfile, Login, Profile, Register, SocialRedirect } from "./pages";
 import ProfileLayout from "./Layout/ProfileLayout";
-import { useAuth } from "./context/AuthProvider";
-import { PrivateRoute } from "./components";
+
+import { PrivateRoute, PublicRoute } from "./components";
 
 const App = () => {
-  const { user } = useAuth();
-  console.log(user);
   return (
     <>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+        <Route path="/social-redirect" element={<SocialRedirect />} />
         <Route path="/profile" element={<ProfileLayout />}>
           <Route
             index

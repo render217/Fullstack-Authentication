@@ -3,37 +3,35 @@ import { requestHandler } from "../util";
 import { getUserProfile } from "../api";
 
 const useProfile = () => {
-  const [currentUser, setCurrentUser] = useState({});
+  const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(false);
 
   const reloadProfile = () => {
-    console.log("before reload", currentUser?.email);
     setReload(!reload);
-    console.log("after reload", currentUser?.email);
   };
+
   const getProfileData = async () => {
     await requestHandler(
-      async () => getUserProfile(),
+      async () => await getUserProfile(),
       setLoading,
       (res) => {
-        const {
-          data: { user },
-        } = res;
+        const { data } = res;
+
         const profileImage =
-          user?.profileImage?.imageUrl ||
-          user?.profileImage?.socialImage ||
-          user?.profileImage?.defaultImage;
+          data.user?.profileImage?.imageUrl ||
+          data.user?.profileImage?.socialImage ||
+          data.user?.profileImage?.defaultImage;
 
         let mappedUser = {
-          ...user,
+          ...data.user,
           profileImage,
         };
 
-        setCurrentUser(mappedUser);
+        setUser(mappedUser);
       },
       (err) => {
-        console.log(err?.response?.data?.message);
+        // console.log(err?.response?.data?.message);
       }
     );
   };
@@ -42,7 +40,7 @@ const useProfile = () => {
     getProfileData();
   }, [reload]);
 
-  return { currentUser, reloadProfile, loading };
+  return { user, setUser, reloadProfile, loading };
 };
 
 export default useProfile;

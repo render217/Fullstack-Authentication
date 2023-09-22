@@ -1,32 +1,40 @@
 import React from "react";
-import { Link, NavLink, Navigate, useNavigate } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  Navigate,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
 import { requestHandler } from "../util";
 import { logoutUser } from "../api";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthProvider";
+// import useProfile from "../hooks/useProfile";
 
-export const Header = ({ showDropDown, setShowDropDown }) => {
-  const { user, setToken, setUser } = useAuth();
+export const Header = ({ user, showDropDown, setShowDropDown }) => {
+  const { isAuth, getLoggedIn, setIsAuth } = useAuth();
+  // const { user } = useProfile();
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await requestHandler(
       async () => logoutUser(),
       null,
-      (res) => {
+      async (res) => {
+        setIsAuth(false);
+        getLoggedIn();
         navigate("/login");
         toast.success(res?.message);
-        setToken("");
-        setUser({});
+        // setIsAuth(false);
       },
       (err) => {
         toast.error(err?.response?.data?.message);
       }
     );
   };
-  if (!user) {
-    Navigate("/login");
-  }
+
   return (
     <>
       <header

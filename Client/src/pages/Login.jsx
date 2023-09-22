@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  Link,
+  redirect,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { SocialLogin } from "../components";
 import { toast } from "react-toastify";
 import { requestHandler } from "../util";
@@ -7,13 +13,25 @@ import { loginUser } from "../api";
 import { useAuth } from "../context/AuthProvider";
 
 export const Login = () => {
-  const { setToken, setUser } = useAuth();
+  const { getLoggedIn } = useAuth();
+
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    let message = searchParams.get("message");
+    if (message) {
+      toast.error(message);
+      message = null;
+      setSearchParams({});
+    }
+  }, []);
   const [disable, setDisable] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!data.email) {
@@ -24,16 +42,17 @@ export const Login = () => {
       toast.error("Password field is required");
       return;
     }
-    
+
     await requestHandler(
-      async () => loginUser(data),
+      async () => await loginUser(data),
       setDisable,
       (res) => {
         const { data } = res;
         navigate("/profile");
         toast.success(res?.message);
-        setUser(data.user);
-        setToken(data.token);
+        
+        // check the status of logged in 
+        getLoggedIn();
       },
       (err) => {
         toast.error(err?.response?.data?.message);

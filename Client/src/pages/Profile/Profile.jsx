@@ -6,9 +6,9 @@ import useProfile from "../../hooks/useProfile";
 import Skeleton from "react-loading-skeleton";
 
 export const Profile = () => {
-  const outletCtx = useOutletContext();
-  const { user } = useAuth();
-  const { loading, currentUser } = useProfile();
+  const { setShowDropDown, user, reloadProfile, loading } = useOutletContext();
+
+  // let { user, loading, reloadProfile } = useProfile();
 
   const encryptedPassword = (pswd = "samplepass") => {
     return new Array(pswd.length).fill("*").join("");
@@ -16,7 +16,7 @@ export const Profile = () => {
 
   return (
     <>
-      <div className="pb-10">
+      <div className="pb-10" onClick={() => setShowDropDown(false)}>
         <main className="max-w-5xl px-5 mx-auto font-NotoSans">
           <h1 className="text-3xl text-center mb-3">Personal info</h1>
           <p className="text-base text-center">
@@ -36,6 +36,7 @@ export const Profile = () => {
                 </div>
                 <Link
                   to="/profile/update"
+                  state={user}
                   className="border border-clrPaleSlate rounded-md px-3 py-2 max-[550px]:text-sm"
                 >
                   Edit Profile
@@ -50,7 +51,7 @@ export const Profile = () => {
                 ) : (
                   <img
                     className="w-14 block max-[550px]:text-right"
-                    src={currentUser?.profileImage}
+                    src={user.profileImage}
                     alt=""
                   />
                 )}
@@ -60,7 +61,7 @@ export const Profile = () => {
               <div className="flex items-center">
                 <p className="basis-1/3 text-clrPaleSlate uppercase">name</p>
                 <p className="basis-2/3 text-clrDarkGrey text-lg max-[550px]:text-right">
-                  {loading ? <Skeleton /> : currentUser?.username}
+                  {loading ? <Skeleton /> : user?.username}
                 </p>
               </div>
             </li>
@@ -68,7 +69,7 @@ export const Profile = () => {
               <div className="flex items-center">
                 <p className="basis-1/3 text-clrPaleSlate uppercase">Bio</p>
                 <p className="basis-2/3 text-clrDarkGrey text-lg max-[550px]:text-right">
-                  {loading ? <Skeleton /> : currentUser?.bio || "-"}
+                  {loading ? <Skeleton /> : user?.bio || "-"}
                 </p>
               </div>
             </li>
@@ -76,7 +77,7 @@ export const Profile = () => {
               <div className="flex items-center">
                 <p className="basis-1/3 text-clrPaleSlate uppercase">Phone</p>
                 <p className="basis-2/3 text-clrDarkGrey text-lg max-[550px]:text-right">
-                  {loading ? <Skeleton /> : currentUser?.phone || "-"}
+                  {loading ? <Skeleton /> : user?.phone || "-"}
                 </p>
               </div>
             </li>
@@ -84,7 +85,7 @@ export const Profile = () => {
               <div className="flex items-center">
                 <p className="basis-1/3 text-clrPaleSlate uppercase">Email</p>
                 <p className="basis-2/3 text-clrDarkGrey text-lg max-[550px]:text-right">
-                  {loading ? <Skeleton /> : currentUser?.email || "-"}
+                  {loading ? <Skeleton /> : user?.email || "-"}
                 </p>
               </div>
             </li>
@@ -94,11 +95,7 @@ export const Profile = () => {
                   Password
                 </p>
                 <p className="basis-2/3 text-clrDarkGrey text-lg max-[550px]:text-right">
-                  {loading ? (
-                    <Skeleton />
-                  ) : (
-                    encryptedPassword(currentUser?.password)
-                  )}
+                  {loading ? <Skeleton /> : encryptedPassword(user?.password)}
                 </p>
               </div>
             </li>

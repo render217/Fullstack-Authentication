@@ -1,11 +1,15 @@
 import React from "react";
 
 export const SocialLogin = () => {
-  const loginWithGoogle = () => {};
-  const loginWithGithub = () => {};
+  const loginWithGoogle = () => {
+    window.open(`${import.meta.env.VITE_SERVER_URI}/auth/google`, "_self");
+  };
+  const loginWithGithub = () => {
+    window.open(`${import.meta.env.VITE_SERVER_URI}/auth/github`, "_self");
+  };
   return (
     <>
-      <div className="my-3 flex justify-center gap-5">
+      <div className="my-3 flex justify-center gap-5" >
         <img
           onClick={loginWithGoogle}
           className="cursor-pointer"
