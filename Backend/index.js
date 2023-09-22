@@ -40,7 +40,11 @@ app.use(function (request, response, next) {
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://fullstack-authentication-pied.vercel.app",
+    ],
     credentials: true,
   })
 );
