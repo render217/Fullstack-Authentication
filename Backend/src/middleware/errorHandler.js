@@ -2,8 +2,8 @@ const express = require("express");
 const ApiError = require("../utils/ApiError");
 const { MongooseError } = require("mongoose");
 const PassportError = require("../utils/PassportError");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const GithubStrategy = require("passport-github2").Strategy;
+// const GoogleStrategy = require("passport-google-oauth20").Strategy;
+// const GithubStrategy = require("passport-github2").Strategy;
 const multer = require("multer");
 /**
  * @param {Error | ApiError} err

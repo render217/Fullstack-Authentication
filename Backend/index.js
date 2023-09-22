@@ -1,6 +1,6 @@
 require("dotenv").config({ path: "./src/config/.env" });
 require("express-async-errors");
-const p = require("./src/config/passport");
+require("./src/config/passport");
 const express = require("express");
 const connectDB = require("./src/config/db");
 const app = express();
@@ -38,7 +38,7 @@ app.use(function (request, response, next) {
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
   })
 );

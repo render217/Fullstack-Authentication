@@ -4,25 +4,31 @@ import { SocialLogin } from "../components";
 import { requestHandler } from "../util";
 import { registerUser } from "../api";
 import { toast } from "react-toastify";
-
+import validator from "../validators/validator";
+import { RegisterSchema } from "../validators/validationSchema";
 export const Register = () => {
   const navigate = useNavigate();
+
+  // state to disable form button
   const [disable, setDisable] = useState(false);
+
+  // form input values
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!data.email) {
-      toast.error("Email is required");
-      return;
-    }
-    if (!data.password) {
-      toast.error("Password is requried");
+
+    // validate input data
+    const { errors } = await validator(RegisterSchema, data);
+    if (errors.length) {
+      toast.error(errors[0]);
       return;
     }
 
+    // call api
     await requestHandler(
       async () => registerUser(data),
       setDisable,
@@ -32,7 +38,7 @@ export const Register = () => {
         navigate("/login");
       },
       (err) => {
-        if (!err) {
+        if (!err?.response) {
           toast.error("Network error");
         } else {
           toast.error(err?.response?.data?.message);
@@ -40,6 +46,7 @@ export const Register = () => {
       }
     );
 
+    //clear input values
     setData((prev) => {
       return {
         ...prev,
@@ -48,6 +55,8 @@ export const Register = () => {
       };
     });
   };
+
+  
   return (
     <div className="w-100 h-[100vh] grid place-items-center px-5 font-NotoSans">
       <div className="max-w-lg border border-clrPaleSlate rounded-3xl px-10 py-10">

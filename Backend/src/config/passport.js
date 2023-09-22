@@ -3,7 +3,7 @@ const GithubStrategy = require("passport-github2").Strategy;
 const passport = require("passport");
 const User = require("../model/user.model");
 const ApiError = require("../utils/ApiError");
-const { exist } = require("joi");
+
 const { PROVIDERS } = require("../utils/constants");
 const PassportError = require("../utils/PassportError");
 

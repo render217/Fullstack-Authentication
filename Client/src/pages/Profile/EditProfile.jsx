@@ -10,18 +10,20 @@ import { requestHandler } from "../../util";
 import { getUserProfile, updateUserProfile } from "../../api";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
+import validator from "../../validators/validator";
+import { UpdateProfileSchema } from "../../validators/validationSchema";
 
 export const EditProfile = () => {
   const { setShowDropDown, user, reloadProfile, loading } = useOutletContext();
   const navigate = useNavigate();
 
-  // for fast reload
   const stateUser = useLocation().state;
 
   const [updatingProfile, setUpdatingProfile] = useState(false);
 
   const fileRef = useRef();
 
+  // state to control form input
   const [data, setData] = useState({
     email: stateUser?.email || user?.email || "",
     bio: stateUser?.bio || user?.bio || "",
@@ -30,9 +32,11 @@ export const EditProfile = () => {
     username: stateUser?.username || user?.username || "",
   });
 
+  // state to control image upload
   const [imageFile, setImageFile] = useState();
   const [imagePreview, setImagePreview] = useState();
 
+  // to update inputdata changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => {
@@ -45,6 +49,7 @@ export const EditProfile = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData();
 
     formData.append("email", data.email);
@@ -54,6 +59,18 @@ export const EditProfile = () => {
     formData.append("username", data.username);
     formData.append("profileImage", imageFile);
 
+    // convert formData to js object
+    const formDataObj = {};
+    formData.forEach((value, key) => (formDataObj[key] = value));
+
+    // validate inputs
+    const { errors } = await validator(UpdateProfileSchema, formDataObj);
+    if (errors.length) {
+      toast.error(errors[0]);
+      return;
+    }
+
+    // call api
     await requestHandler(
       async () => await updateUserProfile(formData),
       setUpdatingProfile,
@@ -197,13 +214,12 @@ export const EditProfile = () => {
                     disabled={
                       user?.providerType === "email_password" ? false : true
                     }
-                    // disabled={false}
                   />
                 )}
                 {loading ? (
                   <Skeleton />
                 ) : (
-                  user?.loginType !== "EMAIL_PASSWORD" && (
+                  user?.providerType !== "email_password" && (
                     <span className="text-[11px] text-clrMediumGrey block">
                       you can only edit your email if you registered with email
                       and password

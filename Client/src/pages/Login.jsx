@@ -5,7 +5,8 @@ import { toast } from "react-toastify";
 import { requestHandler } from "../util";
 import { loginUser } from "../api";
 import { useAuth } from "../context/AuthProvider";
-
+import { LoginSchema } from "../validators/validationSchema";
+import validator from "../validators/validator";
 export const Login = () => {
   const { getLoggedIn } = useAuth();
 
@@ -30,18 +31,17 @@ export const Login = () => {
     password: "",
   });
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!data.email) {
-      toast.error("Email field is required");
-      return;
-    }
-    if (!data.password) {
-      toast.error("Password field is required");
+
+    // validate inputs
+    const { errors } = await validator(LoginSchema, data);
+    if (errors.length) {
+      toast.error(errors[0]);
       return;
     }
 
+    // call api
     await requestHandler(
       async () => await loginUser(data),
       setDisable,
@@ -54,7 +54,7 @@ export const Login = () => {
         getLoggedIn();
       },
       (err) => {
-        if (!err) {
+        if (!err?.response) {
           toast.error("Network error");
         } else {
           toast.error(err?.response?.data?.message);
@@ -63,7 +63,6 @@ export const Login = () => {
     );
   };
 
-  
   return (
     <div className="w-100 h-[100vh] grid place-items-center px-5 font-NotoSans">
       <div className="max-w-lg border border-clrPaleSlate rounded-3xl px-10 py-10">
