@@ -4,7 +4,7 @@ const User = require("../model/user.model");
 const ApiResponse = require("../utils/ApiResponse");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
-const sharp = require("sharp");
+
 const cloudinary = require("../middleware/cloudinary");
 /**
  * @param {express.Request}req

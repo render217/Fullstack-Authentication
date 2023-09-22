@@ -4,8 +4,8 @@ require("./src/config/passport");
 const express = require("express");
 const connectDB = require("./src/config/db");
 const app = express();
-const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
+const cookieSession = require('cookie-session')
 const cors = require("cors");
 const authRoute = require("./src/routes/auth.routes");
 const userRoute = require("./src/routes/user.routes");

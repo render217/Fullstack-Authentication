@@ -8,9 +8,5 @@ router
   .patch(upload.single("profileImage"), userController.updateUser)
   .delete(userController.deleteUser);
 
-// router.post(
-//   "/updateImage",
-//   userController.updateProfileImage
-// );
 
 module.exports = router;
