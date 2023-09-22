@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_SERVER_URI;
+// const BASE_URL = import.meta.env.VITE_SERVER_URI;
+const BASE_URL = "https://auth-backend-eh7f.onrender.com";
 
 export const httpClient = axios.create({
   baseURL: BASE_URL,
