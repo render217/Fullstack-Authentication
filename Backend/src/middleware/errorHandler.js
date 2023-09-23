@@ -1,4 +1,3 @@
-require("dotenv").config({ path: "./config/.env" });
 const express = require("express");
 const ApiError = require("../utils/ApiError");
 const { MongooseError } = require("mongoose");

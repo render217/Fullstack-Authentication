@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
   // set token to the cookie
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     secure: true,
     maxAge: 24 * 60 * 60 * 1000,
   });
@@ -96,7 +96,7 @@ exports.logout = async (req, res) => {
     httpOnly: true,
     expires: new Date(0),
     secure: true,
-    sameSite: "strict",
+    sameSite: "none",
   });
   res.clearCookie("token");
   req.user = undefined;
@@ -116,13 +116,13 @@ exports.socialLogin = async (req, res) => {
   // set token to the cookie
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     secure: true,
     maxAge: 24 * 60 * 60 * 1000,
   });
 
   // res.status(200).redirect(`${process.env.CLIENT_SSO_REDIRECT_URL}/login`);
-  return res.redirect("https://fullstack-authentication-pied.vercel.app/social-redirect");
+  return res.redirect("http://localhost:5173/social-redirect");
 };
 
 /**
