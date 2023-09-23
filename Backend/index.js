@@ -43,7 +43,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://fullstack-authentication-pied.vercel.app",
+      "https://fullstack-auth.onrender.com",
     ],
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
