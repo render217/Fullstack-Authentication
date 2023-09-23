@@ -45,7 +45,7 @@ app.use(
       "http://localhost:5174",
       "https://fullstack-auth.onrender.com",
     ],
-    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+    methods: ["POST", "PUT", "PATCH", "GET", "OPTIONS", "HEAD"],
     credentials: true,
   })
 );
