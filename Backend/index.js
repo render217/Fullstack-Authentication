@@ -45,6 +45,7 @@ app.use(
       "http://localhost:5174",
       "https://fullstack-authentication-pied.vercel.app",
     ],
+    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
   })
 );
@@ -55,7 +56,6 @@ app.use(cookieParser());
 
 passport.initialize();
 passport.session();
-
 
 app.use("/auth", authRoute);
 app.use("/user", ensureAuth, userRoute);
