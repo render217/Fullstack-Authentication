@@ -35,7 +35,7 @@ export const Register = () => {
       (res) => {
         const { data } = res;
         toast.success(res?.message);
-        navigate("/login");
+        navigate("/");
       },
       (err) => {
         if (!err?.response) {
