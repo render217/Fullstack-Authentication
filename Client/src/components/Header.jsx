@@ -25,7 +25,7 @@ export const Header = ({ user, showDropDown, setShowDropDown }) => {
       async (res) => {
         setIsAuth(false);
         getLoggedIn();
-        navigate("/login");
+        navigate("/");
         toast.success(res?.message);
         // setIsAuth(false);
       },
