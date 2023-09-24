@@ -43,8 +43,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://fullstack-auth.onrender.com",
-      "https://65103ac7d1e2685ba8dbf6dc--dynamic-muffin-1680fa.netlify.app"
+      "https://fullstack-auth.onrender.com"
     ],
     methods: ["POST", "PUT", "PATCH", "GET", "OPTIONS", "HEAD"],
     credentials: true,

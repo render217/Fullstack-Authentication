@@ -19,7 +19,7 @@ const errorHandler = (err, req, res, next) => {
     return res
       .status(400)
       .redirect(
-        `${process.env.CLIENT_SSO_REDIRECT_URL}/login?message=${error.message}`
+        `${process.env.CLIENT_SSO_REDIRECT_URL}?message=${error.message}`
       );
   }
 

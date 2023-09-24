@@ -10,15 +10,15 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<Outlet />}>
-          <Route index element={<Navigate to="/login" />} />
           <Route
-            path="login"
+            index
             element={
               <PublicRoute>
                 <Login />
               </PublicRoute>
             }
           />
+
           <Route
             path="register"
             element={

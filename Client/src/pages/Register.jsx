@@ -116,7 +116,7 @@ export const Register = () => {
             <SocialLogin />
             <p className="text-sm text-center">
               Already a member?{" "}
-              <Link to="/login" className="text-clrCelestialBlue">
+              <Link to="/" className="text-clrCelestialBlue">
                 Login
               </Link>
             </p>
