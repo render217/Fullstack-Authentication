@@ -12,7 +12,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      // callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      callbackURL: "https://fullstack-auth.onrender.com/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       const existingUser = await User.findOne({ email: profile._json.email });
