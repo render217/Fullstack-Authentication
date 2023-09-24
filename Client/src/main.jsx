@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -11,9 +11,10 @@ import AuthProvider from "./context/AuthProvider.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <AuthProvider>
-      <App />
+      <Routes>
+        <Route path="/*" element={<App />} />
+      </Routes>
       <ToastContainer
-        // position="top-center"
         autoClose={3000}
         hideProgressBar
         newestOnTop={false}
