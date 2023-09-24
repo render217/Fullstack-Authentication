@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { EditProfile, Login, Profile, Register, SocialRedirect } from "./pages";
 import ProfileLayout from "./Layout/ProfileLayout";
 
@@ -9,41 +9,43 @@ const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
-        <Route path="/social-redirect" element={<SocialRedirect />} />
-        <Route path="/profile" element={<ProfileLayout />}>
+        <Route path="/" element={<Outlet />}>
+          <Route index element={<Navigate to="/login" />} />
           <Route
-            index
+            path="login"
             element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
             }
           />
           <Route
-            path="update"
+            path="register"
             element={
-              <PrivateRoute>
-                <EditProfile />
-              </PrivateRoute>
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
             }
           />
+          <Route path="social-redirect" element={<SocialRedirect />} />
+          <Route path="profile" element={<ProfileLayout />}>
+            <Route
+              index
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="update"
+              element={
+                <PrivateRoute>
+                  <EditProfile />
+                </PrivateRoute>
+              }
+            />
+          </Route>
         </Route>
       </Routes>
     </>
