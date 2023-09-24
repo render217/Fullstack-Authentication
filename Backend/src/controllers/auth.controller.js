@@ -122,7 +122,7 @@ exports.socialLogin = async (req, res) => {
   });
 
   // res.status(200).redirect(`${process.env.CLIENT_SSO_REDIRECT_URL}/login`);
-  return res.redirect("http://localhost:5173/social-redirect");
+  return res.redirect(`${process.env.CLIENT_SSO_REDIRECT_URL}/social-redirect`);
 };
 
 /**
